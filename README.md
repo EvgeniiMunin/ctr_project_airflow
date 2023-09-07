@@ -3,7 +3,7 @@
 ## Sem5. Airflow
 В этом занятии мы настроим обучение модели, 
 как если новые продовые данные на обучение к нам поступали бы постоянно каждый день. 
-Для этого построим пайплайн данных в виде направленного ацикличного графа (Directional Acyclic Graph, DAG).
+Для этого построим пайплайн данных в виде направленного ацикличного графа (Directed Acyclic Graph, DAG).
 В этом нам поможет инструмент [Airflow](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html).
 
 Чтобы поднять Airflow мы будем использовтаь [docker-compose](https://docs.docker.com/compose/). Реализуем 2 DAG'а

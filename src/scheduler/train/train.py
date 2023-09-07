@@ -31,6 +31,8 @@ def train(input_dir: str, output_dir: str, config: str):
     logger.info(f"output_dir: {output_dir}")
     logger.info(f"config: {config}")
 
+    os.makedirs(output_dir, exist_ok=True)
+
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         config
     )
@@ -51,7 +53,7 @@ def train(input_dir: str, output_dir: str, config: str):
     metrics = evaluate_model(predicted_proba, preds, val_target)
     logger.info(f"preds/ targets shapes:  {(preds.shape, val_target.shape)}")
 
-    with open(training_pipeline_params.metric_path, "w") as metric_file:
+    with open(os.path.join(output_dir, "metrics.json"), "w") as metric_file:
         json.dump(metrics, metric_file)
     logger.info(f"Metric is {metrics}")
 

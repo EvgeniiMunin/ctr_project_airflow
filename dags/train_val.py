@@ -7,9 +7,6 @@ from airflow.operators.bash import BashOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 from docker.types import Mount
 
-MODEL_PATH = "data/models/catclf.pkl"
-RAW_DATA_PATH = "data/raw/sampled_train_50k.csv"
-
 
 with DAG(
     dag_id="airflow_train_val",
@@ -17,12 +14,15 @@ with DAG(
     schedule_interval="@daily",
 ) as dag:
     wait_for_data = FileSensor(
-        task_id="wait-for-data", poke_interval=5, retries=5, filepath=RAW_DATA_PATH
+        task_id="wait-for-data",
+        poke_interval=5,
+        retries=5,
+        filepath="data/raw/{{ ds }}/sampled_train_50k.csv"
     )
 
     preprocess = DockerOperator(
         image="preprocess",
-        command="--input-dir /data/raw --output-dir /data/processed --config configs/train_config.yaml",
+        command="--input-dir /data/raw/{{ ds }} --output-dir /data/processed/{{ ds }} --config configs/train_config.yaml",
         task_id="preprocess",
         do_xcom_push=False,
         mounts=[
@@ -36,7 +36,7 @@ with DAG(
 
     split = DockerOperator(
         image="split",
-        command="--input-dir /data/processed --output-dir /data/processed --test-size 0.2",
+        command="--input-dir /data/processed/{{ ds }} --output-dir /data/processed/{{ ds }} --test-size 0.2",
         task_id="split",
         do_xcom_push=False,
         mounts=[
@@ -50,7 +50,7 @@ with DAG(
 
     train = DockerOperator(
         image="train",
-        command="--input-dir /data/processed --output-dir /data/models --config configs/train_config.yaml",
+        command="--input-dir /data/processed/{{ ds }} --output-dir /data/models/{{ ds }} --config configs/train_config.yaml",
         task_id="train",
         do_xcom_push=False,
         mounts=[

@@ -32,6 +32,8 @@ def preprocess(input_dir: str, output_dir: str, config: str):
     logger.info(f"output_dir: {output_dir}")
     logger.info(f"config: {config}")
 
+    os.makedirs(output_dir, exist_ok=True)
+
     training_pipeline_params: TrainingPipelineParams = read_training_pipeline_params(
         config
     )

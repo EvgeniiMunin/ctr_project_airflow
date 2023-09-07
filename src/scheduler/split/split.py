@@ -19,6 +19,8 @@ def split(input_dir: str, output_dir: str, test_size: str):
     logger.info(f"output_dir: {output_dir}")
     logger.info(f"test_size: {test_size}")
 
+    os.makedirs(output_dir, exist_ok=True)
+
     df = read_data(os.path.join(input_dir, "processed.csv"))
 
     train, test = split_train_val_data(df, test_size=float(test_size))

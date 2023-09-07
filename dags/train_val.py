@@ -17,7 +17,7 @@ with DAG(
         task_id="wait-for-data",
         poke_interval=5,
         retries=5,
-        filepath="data/raw/{{ ds }}/sampled_train_50k.csv"
+        filepath="data/raw/{{ ds }}/sampled_train_50k.csv",
     )
 
     preprocess = DockerOperator(
